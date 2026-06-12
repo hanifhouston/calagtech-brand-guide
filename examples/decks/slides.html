@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Partner Briefing — California AgTech Alliance</title>
+  <meta name="description" content="A partner briefing deck for the California AgTech Alliance — title, agenda, three pillars, big quote, climate photo, scope, and call-to-action." />
+
+  <link rel="icon" type="image/png" href="../../assets/logos/png/brandmark-lime.png" />
+  <link rel="stylesheet" href="../../assets/code/styles/tokens.css" />
+  <script src="../../assets/code/scripts/deck-stage.js"></script>
+
+  <style>
+    /* Deck shell */
+    body { margin: 0; background: #000; color: var(--cata-cream); }
+    deck-stage { display: block; width: 100vw; height: 100vh; }
+    deck-stage > section {
+      width: 1920px; height: 1080px;
+      position: relative; overflow: hidden;
+      font-family: var(--font-text);
+      color: var(--cata-navy);
+      background: var(--cata-cream);
+    }
+
+    /* Shared elements */
+    .slide-frame { position: absolute; inset: 0; padding: 96px 120px; display: flex; flex-direction: column; box-sizing: border-box; }
+    .brand-mark { position: absolute; top: 56px; left: 120px; height: 44px; }
+    .slide-no  { position: absolute; bottom: 56px; right: 120px; font-family: var(--font-mono); font-size: 16px; color: var(--cata-ink-3); letter-spacing: 0.1em; }
+    .on-dark .slide-no { color: rgba(255,255,255,0.55); }
+
+    .eyebrow-l {
+      /* Eyebrow — JetBrains Mono, ALL CAPS, +14% tracking. Metadata role. */
+      font-family: var(--font-mono);
+      font-size: 18px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--cata-ink-3);
+      margin: 0;
+    }
+    .on-dark .eyebrow-l { color: var(--cata-lime); }
+
+    .display-xxl { font-family: var(--font-display); font-weight: 700; font-size: 144px; line-height: 0.96; letter-spacing: -0.02em; }
+    .display-xl  { font-family: var(--font-display); font-weight: 700; font-size: 112px; line-height: 0.98; letter-spacing: -0.018em; }
+    .display-l   { font-family: var(--font-display); font-weight: 700; font-size: 84px;  line-height: 1.02; letter-spacing: -0.015em; }
+    .display-m   { font-family: var(--font-display); font-weight: 700; font-size: 64px;  line-height: 1.05; letter-spacing: -0.012em; }
+
+    .on-dark { background: var(--cata-navy); color: var(--cata-cream); }
+    .on-dark h1, .on-dark h2 { color: var(--cata-mint); }
+
+    /* ─ Slide 1 — Title ─ */
+    .s-title { background: var(--cata-navy); color: var(--cata-cream); }
+    .s-title::after {
+      content: ""; position: absolute; inset: 0;
+      background: url('../../assets/graphics/patterns/png/brandmark-tile/brandmark-tile-mint.png') center/280px;
+      opacity: 0.07; pointer-events: none;
+    }
+    .s-title .frame { position: relative; z-index: 1; padding: 120px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+    .s-title h1 { margin: 0; max-width: 1500px; color: var(--cata-mint); }
+    .s-title .meta { display: flex; gap: 64px; font-size: 22px; color: rgba(255,255,255,0.86); }
+    .s-title .meta .k {
+      /* Eyebrow label — JetBrains Mono 500, ALL CAPS, 0.14em (matches typography revision). */
+      font-family: var(--font-mono);
+      color: var(--cata-lime);
+      font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      font-size: 13px; display: block; margin-bottom: 6px;
+    }
+
+    /* ─ Slide 2 — Agenda ─ */
+    .s-agenda { background: var(--cata-cream); }
+    .s-agenda h2 { margin: 24px 0 0; max-width: 1400px; color: var(--cata-navy); }
+    .agenda-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 64px; }
+    .agenda-item {
+      padding: 36px 36px 40px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid var(--cata-rule);
+      display: flex; flex-direction: column; gap: 16px;
+      min-height: 360px;
+    }
+    .agenda-item .num { font-family: var(--font-mono); font-size: 16px; color: var(--cata-ink-3); letter-spacing: 0.04em; }
+    /* Agenda titles — slide-scale large statement, so Display earns the slot at full weight. */
+    .agenda-item h3 { font-family: var(--font-display); font-weight: 700; font-size: 56px; line-height: 1; margin: 0; color: var(--cata-navy); letter-spacing: -0.018em; }
+    .agenda-item p { font-size: 22px; line-height: 1.4; margin: 0; color: var(--cata-ink-2); max-width: 440px; }
+    .agenda-item .icon { height: 56px; width: 56px; object-fit: contain; }
+
+    /* ─ Slide 3 — Pillars on dark ─ */
+    .s-pillars { background: var(--cata-navy); color: var(--cata-cream); }
+    .s-pillars::after {
+      content: ""; position: absolute; inset: 0;
+      background: url('../../assets/logos/png/brandmark-mint.png') right -120px bottom -120px / 480px no-repeat;
+      opacity: 0.08; pointer-events: none;
+    }
+    .s-pillars h2 { color: var(--cata-mint); margin: 24px 0 0; max-width: 1400px; }
+    .pillar-rows { margin-top: 60px; display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 1; }
+    .pillar-row {
+      display: grid; grid-template-columns: 80px 360px 1fr;
+      gap: 32px; align-items: baseline;
+      padding: 32px 0;
+      border-top: 1px solid rgba(255,255,255,0.10);
+    }
+    .pillar-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.10); }
+    .pillar-row .n    { font-family: var(--font-mono); font-size: 22px; color: var(--cata-lime); }
+    .pillar-row .name { font-family: var(--font-display); font-weight: 700; font-size: 64px; line-height: 1; color: var(--cata-mint); letter-spacing: -0.018em; }
+    .pillar-row .desc { font-size: 24px; line-height: 1.45; color: rgba(255,255,255,0.86); padding-top: 6px; }
+
+    /* ─ Slide 4 — Big quote ─ */
+    .s-quote { background: var(--cata-mint); color: var(--cata-navy); }
+    .s-quote .frame { padding: 120px 160px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 48px; position: relative; }
+    .s-quote .arrow { position: absolute; top: 96px; left: 120px; height: 80px; }
+    .s-quote blockquote { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 96px; line-height: 1; letter-spacing: -0.018em; max-width: 1500px; color: var(--cata-navy); }
+    .s-quote cite { display: block; margin-top: 24px; font-style: normal; font-size: 24px; color: var(--cata-ink-2); line-height: 1.5; max-width: 1200px; }
+    .s-quote cite .name { font-weight: 700; color: var(--cata-navy); display: block; margin-bottom: 6px; }
+
+    /* ─ Slide 5 — Photo + headline ─ */
+    .s-photo { background: var(--cata-navy-deep); color: var(--cata-cream); }
+    .s-photo .photo { position: absolute; inset: 0; }
+    .s-photo .photo img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.95) brightness(0.7); }
+    .s-photo::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(11,33,49,0.15) 0%, rgba(11,33,49,0.55) 55%, rgba(11,33,49,0.92) 100%);
+    }
+    .s-photo .frame { position: relative; z-index: 1; padding: 120px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; gap: 32px; }
+    .s-photo h2 { margin: 0; max-width: 1500px; color: var(--cata-mint); }
+    .s-photo p  { font-size: 24px; max-width: 980px; line-height: 1.45; color: rgba(255,255,255,0.86); margin: 8px 0 0; }
+
+    /* ─ Slide 6 — Scope / stats ─ */
+    .s-stats { background: var(--cata-cream); }
+    .s-stats .frame { padding: 120px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 48px; position: relative; }
+    .s-stats h2 { font-family: var(--font-display); font-weight: 700; font-size: 96px; line-height: 1; margin: 0; max-width: 1400px; letter-spacing: -0.018em; color: var(--cata-navy); }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 32px; }
+    .stat-cell {
+      background: var(--cata-mint);
+      border-radius: 8px;
+      padding: 36px 36px 40px; min-height: 240px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    /* KPI numerals — Display earns its place; the digit forms are part of the brand voice. */
+    .stat-cell .big { font-family: var(--font-display); font-weight: 700; font-size: 112px; line-height: 0.95; color: var(--cata-navy); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+    .stat-cell .small { font-size: 20px; color: var(--cata-ink-2); line-height: 1.35; }
+
+    /* ─ Slide 7 — Closer / CTA ─ */
+    .s-cta { background: var(--cata-navy); color: var(--cata-cream); }
+    .s-cta::before {
+      content: ""; position: absolute; inset: 0;
+      background: url('../../assets/graphics/patterns/png/brandmark-tile/brandmark-tile-mint.png') center bottom / 340px;
+      opacity: 0.08; pointer-events: none;
+    }
+    .s-cta .frame { padding: 120px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative; z-index: 1; gap: 24px; }
+    .s-cta h2 { margin: 0; max-width: 1500px; color: var(--cata-mint); }
+    .s-cta .actions { display: flex; gap: 32px; align-items: baseline; flex-wrap: wrap; }
+    .s-cta .btn-primary {
+      background: var(--cata-lime); color: var(--cata-navy);
+      padding: 22px 36px; border-radius: 999px;
+      font-family: var(--font-text); font-weight: 700; font-size: 22px;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 12px;
+    }
+    .s-cta .btn-primary svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .s-cta .url { font-family: var(--font-mono); font-size: 22px; color: rgba(255,255,255,0.86); }
+  </style>
+</head>
+<body>
+
+<script type="application/json" id="speaker-notes">
+[
+  "Welcome. I'm here representing the California AgTech Alliance — the statewide platform that connects agricultural technology, workforce, and entrepreneurship across nine California regions, anchored at UC ANR. Today I want to walk you through who we are, how we work, and how we connect with the work you're already doing.",
+  "Three things to cover: who the Alliance is, the three pillars that organize our work, and the concrete shape of partnership. We won't sell you on anything. The Alliance is shared infrastructure — its job is to make your work easier, not to replace it.",
+  "Workforce, Entrepreneurship, and Network — three integrated functions, not competing programs. Workforce supplies talent that enables technology adoption. Entrepreneurship supplies the validated solutions. The Network is the backbone that aligns those efforts across nine regions and over time.",
+  "This is the line we keep coming back to: collaboration is California's advantage. The fragmentation problem is real — but the assets are already here. Our job is to align them, not to build from scratch.",
+  "California's AgTech challenge isn't a lack of innovation; it's a lack of connection. The Alliance closes that gap — between farms and startups, between training and credentials, between regions and the statewide picture.",
+  "What partnership looks like in numbers: nine regions, three pillars, eight coalition projects, one statewide platform. Each of those is a connection point — not a deliverable we own, but a place where partners plug in.",
+  "If your work touches California agriculture — workforce, entrepreneurship, climate, equity — there's a place for you in the Alliance. We're at calagtechalliance.org. Let's make California's agricultural future legible to the people who need it most."
+]
+</script>
+
+<deck-stage>
+
+  <!-- 01 — Title -->
+  <section class="s-title on-dark" data-screen-label="01 Title">
+    <img src="../../assets/logos/png/logo-white.png" class="brand-mark" style="height: 56px;" alt="" />
+    <div class="frame">
+      <div></div>
+      <div>
+        <p class="eyebrow-l">Partner briefing · 2026</p>
+        <h1 class="display-xxl" style="margin-top: 28px;">
+          Connecting California Food<br />for the Future.
+        </h1>
+      </div>
+      <div class="meta">
+        <div><span class="k">Lead institution</span>UC Agriculture and Natural Resources</div>
+        <div><span class="k">Funding</span>California Jobs First</div>
+        <div><span class="k">Reach</span>9 California regions</div>
+      </div>
+    </div>
+    <span class="slide-no">01 / 07</span>
+  </section>
+
+  <!-- 02 — Agenda -->
+  <section class="s-agenda" data-screen-label="02 Agenda">
+    <img src="../../assets/logos/png/logo-navy.png" class="brand-mark" style="height: 44px;" alt="" />
+    <div class="slide-frame">
+      <p class="eyebrow-l">Agenda</p>
+      <h2 class="display-l">
+        Who we are, how we work, where we connect.
+      </h2>
+      <div class="agenda-list">
+        <div class="agenda-item">
+          <img src="../../assets/graphics/motifs/png/root/root-teal.png" class="icon" alt="" />
+          <span class="num">01 / Context</span>
+          <h3>The Alliance</h3>
+          <p>A backbone, not a program operator. Statewide coordination that lets regional partners do more, together.</p>
+        </div>
+        <div class="agenda-item">
+          <img src="../../assets/graphics/motifs/png/spark/spark-lime.png" class="icon" alt="" />
+          <span class="num">02 / Structure</span>
+          <h3>Three pillars</h3>
+          <p>Workforce, Entrepreneurship, and Network — integrated, not competing, with concrete partner programs in each.</p>
+        </div>
+        <div class="agenda-item">
+          <img src="../../assets/graphics/motifs/png/leaf/leaf-teal.png" class="icon" alt="" />
+          <span class="num">03 / Partnership</span>
+          <h3>Where you fit</h3>
+          <p>How regional partners, employers, investors, and policymakers plug into the Alliance's shared infrastructure.</p>
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">02 / 07</span>
+  </section>
+
+  <!-- 03 — Pillars on dark -->
+  <section class="s-pillars on-dark" data-screen-label="03 Pillars">
+    <img src="../../assets/logos/png/logo-white.png" class="brand-mark" style="height: 44px;" alt="" />
+    <div class="slide-frame">
+      <p class="eyebrow-l">Three pillars · One integrated system</p>
+      <h2 class="display-l">
+        Workforce, Entrepreneurship, Network.
+      </h2>
+      <div class="pillar-rows">
+        <div class="pillar-row">
+          <span class="n">01</span>
+          <span class="name">Workforce</span>
+          <p class="desc">A statewide pipeline of skilled AgTech talent. AWDP, Farm Robotics Challenge &amp; Academy, DUCC, FARMS Field Days — partner-delivered, Alliance-aligned.</p>
+        </div>
+        <div class="pillar-row">
+          <span class="n">02</span>
+          <span class="name">Entrepreneurship</span>
+          <p class="desc">Commercializing AgTech solutions. VINE Build, VINE Connect, and Innovation Grant vouchers — capital, expertise, and field validation under one roof.</p>
+        </div>
+        <div class="pillar-row">
+          <span class="n">03</span>
+          <span class="name">Network</span>
+          <p class="desc">The backbone. Governance, working groups, the digital hub, investor network, branding, and policy — what differentiates the Alliance from a list of programs.</p>
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">03 / 07</span>
+  </section>
+
+  <!-- 04 — Big quote -->
+  <section class="s-quote" data-screen-label="04 Quote">
+    <img src="../../assets/logos/png/logo-navy.png" class="brand-mark" style="height: 44px;" alt="" />
+    <img src="../../assets/graphics/motifs/png/arrows/arrow-down-right-lime.png" class="arrow" alt="" />
+    <div class="frame">
+      <blockquote>
+        Collaboration is California's advantage.
+      </blockquote>
+      <cite>
+        <span class="name">A guiding line for the Alliance.</span>
+        California's AgTech ecosystem is coordinated and grounded in real agricultural needs. The Alliance is the entry point.
+      </cite>
+    </div>
+    <span class="slide-no">04 / 07</span>
+  </section>
+
+  <!-- 05 — Photo + headline -->
+  <section class="s-photo on-dark" data-screen-label="05 Climate">
+    <div class="photo"><img src="../reports/cover-climate.jpg" alt="" /></div>
+    <img src="../../assets/logos/png/logo-white.png" class="brand-mark" style="height: 44px;" alt="" />
+    <div class="frame">
+      <p class="eyebrow-l">Climate-smart, region-aware</p>
+      <h2 class="display-xl">Building climate resilience.</h2>
+      <p>
+        Field-validated technologies, ready for adoption at scale — paired with
+        a workforce that can actually run them. The Alliance closes the gap
+        between innovation and adoption, region by region.
+      </p>
+    </div>
+    <span class="slide-no">05 / 07</span>
+  </section>
+
+  <!-- 06 — Scope -->
+  <section class="s-stats" data-screen-label="06 Scope">
+    <img src="../../assets/logos/png/logo-navy.png" class="brand-mark" style="height: 44px;" alt="" />
+    <div class="frame">
+      <p class="eyebrow-l">Scope at a glance</p>
+      <h2>Nine regions, three pillars, one statewide platform.</h2>
+      <div class="stat-grid">
+        <div class="stat-cell"><span class="big">9</span><span class="small">California regions in the network</span></div>
+        <div class="stat-cell"><span class="big">3</span><span class="small">Integrated pillars: Workforce, Entrepreneurship, Network</span></div>
+        <div class="stat-cell"><span class="big">8</span><span class="small">Partner projects in the statewide coalition</span></div>
+        <div class="stat-cell"><span class="big">1</span><span class="small">Lead institution: UC Agriculture and Natural Resources</span></div>
+      </div>
+    </div>
+    <span class="slide-no">06 / 07</span>
+  </section>
+
+  <!-- 07 — Closer / CTA -->
+  <section class="s-cta on-dark" data-screen-label="07 Connect">
+    <img src="../../assets/logos/png/logo-white.png" class="brand-mark" style="height: 56px;" alt="" />
+    <div class="frame">
+      <p class="eyebrow-l">Where partnership starts</p>
+      <h2 class="display-xxl">
+        Find your place in the<br />statewide network.
+      </h2>
+      <div class="actions">
+        <a class="btn-primary" href="../website/index.html">
+          Connect with the Alliance
+          <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 10.5 L 10.5 3.5"/><path d="M5 3.5 L 10.5 3.5 L 10.5 9"/></svg>
+        </a>
+        <span class="url">calagtechalliance.org</span>
+      </div>
+    </div>
+    <span class="slide-no">07 / 07</span>
+  </section>
+
+</deck-stage>
+
+</body>
+</html>

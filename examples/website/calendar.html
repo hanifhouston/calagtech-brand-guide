@@ -1,0 +1,1480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Events &amp; Opportunities · California AgTech Alliance</title>
+  <meta name="description" content="A statewide hub for events, applications, funding, trainings, and deadlines across California's AgTech ecosystem. Filter by type, region, topic, or who it's for — or submit your own opportunity." />
+
+  <link rel="icon" type="image/png" href="../../assets/logos/png/brandmark-lime.png" />
+  <link rel="stylesheet" href="../../assets/code/styles/tokens.css" />
+  <link rel="stylesheet" href="../../assets/code/styles/styles.css" />
+
+  <style>
+    /* ───────────────────── CALENDAR PAGE ───────────────────── */
+
+    /* Hero — compact page-opener */
+    .cal-hero {
+      background: var(--cata-navy);
+      color: var(--cata-cream);
+      padding: 96px 0 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cal-hero__inner {
+      max-width: 820px;
+    }
+
+    .cal-hero h1 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(48px, 6.4vw, 80px);
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      color: var(--cata-cream);
+      margin: 16px 0 16px;
+      text-wrap: balance;
+    }
+    .cal-hero h1 .accent { color: var(--cata-lime); }
+    .cal-hero__lede {
+      font-size: 17px;
+      line-height: 1.55;
+      color: rgba(243,243,239,0.82);
+      max-width: 580px;
+      margin: 0;
+    }
+
+    .cal-hero__cta {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    /* ───── FILTER BAR (sticky) ───── */
+    .cal-filters {
+      background: var(--cata-paper);
+      border-bottom: 1px solid var(--rule);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      box-shadow: var(--shadow-1);
+    }
+    .cal-filters__inner {
+      padding: 22px 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Search input */
+    .cal-search {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .cal-search__icon {
+      position: absolute;
+      left: 16px;
+      width: 18px;
+      height: 18px;
+      color: var(--fg-3);
+      pointer-events: none;
+    }
+    .cal-search__input {
+      width: 100%;
+      font-family: var(--font-text);
+      font-size: 15px;
+      line-height: 1.4;
+      color: var(--fg);
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-3);
+      padding: 13px 16px 13px 44px;
+      transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+    }
+    .cal-search__input::placeholder {
+      color: var(--fg-3);
+    }
+    .cal-search__input:focus {
+      outline: none;
+      border-color: var(--cata-navy);
+      box-shadow: 0 0 0 3px rgba(179, 255, 0, 0.4);
+    }
+
+    /* Primary row — Type chips + Region dropdown + More toggle */
+    .cal-filter-primary {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .cal-filter-primary__group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 0;
+    }
+    .cal-filter-primary__controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Region select */
+    .cal-region {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cal-region select {
+      font-family: var(--font-text);
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1;
+      color: var(--cata-navy);
+      background: #fff
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%230B2131' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>")
+        no-repeat right 12px center / 10px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-2);
+      padding: 9px 32px 9px 13px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+    }
+    .cal-region select:focus {
+      outline: none;
+      border-color: var(--cata-navy);
+      box-shadow: 0 0 0 3px rgba(179, 255, 0, 0.4);
+    }
+
+    .cal-filter-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+    @media (max-width: 720px) {
+      .cal-filter-row { grid-template-columns: 1fr; gap: 6px; }
+    }
+    .cal-filter-row__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
+    .cal-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .cal-chip {
+      font-family: var(--font-text);
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 1;
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--fg-2);
+      cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+      white-space: nowrap;
+    }
+    .cal-chip:hover {
+      border-color: var(--cata-ink-2);
+      color: var(--fg);
+    }
+    .cal-chip[aria-pressed="true"] {
+      background: var(--cata-lime);
+      border-color: var(--cata-lime);
+      color: var(--cata-navy);
+      font-weight: 600;
+    }
+    .cal-chip--clear {
+      background: transparent;
+      border-color: transparent;
+      color: var(--cata-teal);
+      padding-left: 10px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .cal-chip--clear:hover {
+      color: var(--cata-teal-deep);
+      background: transparent;
+    }
+
+    .cal-filters__meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--rule);
+      flex-wrap: wrap;
+    }
+    .cal-filters__count {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fg-3);
+      letter-spacing: 0.04em;
+    }
+    .cal-filters__count strong {
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--cata-navy);
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    /* ───── EVENTS LIST ───── */
+    .cal-results {
+      background: var(--cata-cream);
+      padding: 56px 0 96px;
+    }
+    .cal-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .cal-event {
+      display: grid;
+      grid-template-columns: 168px 1fr auto;
+      gap: 28px;
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-3);
+      padding: 24px 28px;
+      transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+    }
+    .cal-event:hover {
+      border-color: var(--cata-navy);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-2);
+    }
+    @media (max-width: 720px) {
+      .cal-event { grid-template-columns: 1fr; gap: 16px; padding: 20px; }
+    }
+
+    /* Date column — navy block with lime accent */
+    .cal-event__date {
+      background: var(--cata-navy);
+      color: var(--cata-cream);
+      border-radius: var(--radius-2);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      align-self: start;
+      min-height: 96px;
+    }
+    .cal-event__date .month {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--cata-lime);
+    }
+    .cal-event__date .day {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 40px;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--cata-cream);
+      margin: 6px 0 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .cal-event__date .time {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: rgba(243,243,239,0.72);
+    }
+    .cal-event__date--multi .day { font-size: 28px; }
+    .cal-event__date--multi .day-range {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--cata-cream);
+      margin: 4px 0 4px;
+    }
+
+    /* Body column */
+    .cal-event__body { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    .cal-event__meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .cal-event__type {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--cata-lime);
+      color: var(--cata-navy);
+      font-weight: 600;
+      line-height: 1;
+    }
+    .cal-event__type--training    { background: var(--cata-mint);       color: var(--cata-navy); }
+    .cal-event__type--application { background: var(--cata-teal);       color: var(--cata-cream); }
+    .cal-event__type--funding     { background: var(--cata-lime-soft);  color: var(--cata-navy); }
+    .cal-event__type--deadline    { background: var(--cata-navy-tint);  color: var(--cata-lime); }
+    .cal-event__pillar {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cata-teal);
+    }
+    .cal-event__amount {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: -0.012em;
+      color: var(--cata-navy);
+      margin: 0 0 -2px;
+    }
+    .cal-event__title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 22px;
+      line-height: 1.18;
+      letter-spacing: -0.012em;
+      color: var(--cata-navy);
+      margin: 0;
+      text-wrap: balance;
+    }
+    .cal-event__where {
+      font-family: var(--font-text);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--fg-2);
+      margin: 0;
+    }
+    .cal-event__where strong { font-weight: 600; color: var(--fg); }
+    .cal-event__excerpt {
+      font-family: var(--font-text);
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--fg-2);
+      margin: 4px 0 0;
+      max-width: 640px;
+    }
+    .cal-event__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .cal-event__tag {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--cata-cream);
+      border: 1px solid var(--rule);
+      color: var(--fg-2);
+      white-space: nowrap;
+    }
+    .cal-event__tag--region {
+      background: #fff;
+      border-color: var(--cata-teal);
+      color: var(--cata-teal-deep);
+    }
+    .cal-event__tag--topic {
+      background: var(--cata-mint);
+      border-color: var(--cata-mint-deep);
+      color: var(--cata-navy);
+    }
+
+    /* Action column */
+    .cal-event__action { align-self: center; display: flex; align-items: center; }
+    @media (max-width: 720px) { .cal-event__action { justify-self: start; } }
+
+    /* Empty state */
+    .cal-empty {
+      text-align: center;
+      padding: 72px 24px;
+      background: #fff;
+      border: 1px dashed var(--rule);
+      border-radius: var(--radius-3);
+      color: var(--fg-2);
+    }
+    .cal-empty h3 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: -0.012em;
+      color: var(--cata-navy);
+      margin: 0 0 8px;
+    }
+    .cal-empty p { margin: 0 auto; max-width: 420px; font-size: 14.5px; line-height: 1.55; }
+
+    /* ───── SUBMIT FORM SECTION ───── */
+    .cal-submit {
+      background: var(--cata-paper);
+      border-top: 1px solid var(--rule);
+      padding: 96px 0;
+    }
+    .cal-submit__inner {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 64px;
+      align-items: start;
+    }
+    @media (max-width: 880px) { .cal-submit__inner { grid-template-columns: 1fr; gap: 32px; } }
+    .cal-submit__copy h2 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(32px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.022em;
+      color: var(--cata-navy);
+      margin: 12px 0 16px;
+      text-wrap: balance;
+    }
+    .cal-submit__copy p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--fg-2);
+      max-width: 460px;
+      margin: 0 0 16px;
+    }
+    .cal-submit__guidance {
+      margin-top: 24px;
+      padding: 20px 22px;
+      background: var(--cata-mint);
+      border-radius: var(--radius-3);
+      font-family: var(--font-text);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--cata-navy);
+    }
+    .cal-submit__guidance strong { font-weight: 600; }
+
+    /* Form */
+    .cal-form {
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-3);
+      padding: 32px;
+      box-shadow: var(--shadow-1);
+    }
+    .cal-form__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 720px) { .cal-form__grid { grid-template-columns: 1fr; } }
+    .cal-field { display: flex; flex-direction: column; gap: 6px; }
+    .cal-field--full { grid-column: 1 / -1; }
+    .cal-field label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-2);
+      font-weight: 500;
+    }
+    .cal-field label .req { color: var(--cata-teal); margin-left: 2px; }
+    .cal-field input,
+    .cal-field select,
+    .cal-field textarea {
+      font-family: var(--font-text);
+      font-size: 14.5px;
+      line-height: 1.45;
+      color: var(--fg);
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-2);
+      padding: 11px 13px;
+      transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+    }
+    .cal-field input:focus,
+    .cal-field select:focus,
+    .cal-field textarea:focus {
+      outline: none;
+      border-color: var(--cata-navy);
+      box-shadow: 0 0 0 3px rgba(179, 255, 0, 0.4);
+    }
+    .cal-field textarea { resize: vertical; min-height: 120px; }
+
+    .cal-field__chiplist {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 4px 0;
+    }
+    .cal-field__chip {
+      font-family: var(--font-text);
+      font-weight: 500;
+      font-size: 13px;
+      padding: 7px 13px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--fg-2);
+      cursor: pointer;
+      transition: background var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast);
+    }
+    .cal-field__chip:hover { border-color: var(--cata-ink-2); }
+    .cal-field__chip[aria-pressed="true"] {
+      background: var(--cata-navy);
+      border-color: var(--cata-navy);
+      color: var(--cata-lime);
+    }
+
+    .cal-form__footer {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cal-form__notice {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--fg-3);
+      max-width: 360px;
+    }
+
+    /* Toast for "form submitted" demo state */
+    .cal-form__toast {
+      display: none;
+      margin-top: 18px;
+      padding: 14px 18px;
+      background: var(--cata-lime);
+      border-radius: var(--radius-2);
+      font-family: var(--font-text);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--cata-navy);
+    }
+    .cal-form__toast.is-visible { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- ────────────────────── HEADER (matches index.html) ─────────────────────── -->
+  <header class="site-header" data-surface="dark">
+    <div class="container site-header__inner">
+      <a class="site-header__logo" href="#" aria-label="California AgTech Alliance, home">
+        <img src="../../assets/logos/png/logo-white.png" alt="California AgTech Alliance" />
+      </a>
+      <nav class="site-header__nav" aria-label="Primary">
+        <a href="#">About</a>
+        <a href="#">Programs</a>
+        <a href="#">Network</a>
+        <a href="calendar.html" aria-current="page">Events</a>
+        <a href="#">News</a>
+        <a href="#">Resources</a>
+        <a href="#">Get Involved</a>
+        <a href="#" class="btn btn--outline-lime">
+          Contact Us
+          <svg class="icon-arrow-ne" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M3.5 10.5 L 10.5 3.5" />
+            <path d="M5 3.5 L 10.5 3.5 L 10.5 9" />
+          </svg>
+        </a>
+      </nav>
+      <button class="site-header__mobile-toggle" type="button" aria-label="Open menu">Menu</button>
+    </div>
+  </header>
+
+  <!-- ────────────────────── HERO ─────────────────────── -->
+  <section class="cal-hero" data-surface="dark">
+    <div class="container">
+      <div class="cal-hero__inner">
+        <span class="cata-eyebrow cata-eyebrow--lime">Events &amp; Opportunities · Statewide hub</span>
+        <h1>Find what's open <span class="accent">across California.</span></h1>
+        <p class="cal-hero__lede">
+          One place for everything moving across the Alliance — field days, trainings, open applications, and funding windows. Search by keyword or narrow by region, then submit what you're hosting.
+        </p>
+        <div class="cal-hero__cta">
+          <a href="#submit" class="btn btn--primary btn--lg">
+            Submit an opportunity
+            <svg class="icon-arrow-ne" viewBox="0 0 14 14" aria-hidden="true">
+              <path d="M3.5 10.5 L 10.5 3.5" />
+              <path d="M5 3.5 L 10.5 3.5 L 10.5 9" />
+            </svg>
+          </a>
+          <a href="#calendar-list" class="btn btn--outline-lime btn--lg">Browse what's open</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────── STICKY FILTER BAR ─────────────────────── -->
+  <section class="cal-filters" aria-label="Find opportunities">
+    <div class="container cal-filters__inner">
+
+      <!-- Row 1: Search input (full width) -->
+      <div class="cal-search">
+        <svg class="cal-search__icon" viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <line x1="13.5" y1="13.5" x2="17.5" y2="17.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+        <input
+          type="search"
+          id="searchInput"
+          class="cal-search__input"
+          placeholder="Search by keyword — title, host, venue, topic…"
+          aria-label="Search opportunities"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Row 2: Type chips + Region dropdown + More toggle + Clear -->
+      <div class="cal-filter-primary">
+        <div class="cal-filter-primary__group">
+          <span class="cal-filter-row__label" id="lbl-type">Type</span>
+          <div class="cal-chips" role="group" aria-labelledby="lbl-type" data-filter-group="type" data-multi="true">
+            <button class="cal-chip" type="button" data-value="" aria-pressed="true">All</button>
+            <button class="cal-chip" type="button" data-value="event" aria-pressed="false">Events</button>
+            <button class="cal-chip" type="button" data-value="training" aria-pressed="false">Trainings</button>
+            <button class="cal-chip" type="button" data-value="application" aria-pressed="false">Applications</button>
+            <button class="cal-chip" type="button" data-value="funding" aria-pressed="false">Funding</button>
+          </div>
+        </div>
+
+        <div class="cal-filter-primary__controls">
+          <label class="cal-region">
+            <span class="cal-filter-row__label" id="lbl-region">Region</span>
+            <select id="regionSelect" data-filter-group="region" aria-labelledby="lbl-region">
+              <option value="">All regions</option>
+              <option value="bay-area">Bay Area</option>
+              <option value="north-state">North State</option>
+              <option value="sacramento">Sacramento</option>
+              <option value="north-sjv">North San Joaquin Valley</option>
+              <option value="central-sjv">Central San Joaquin Valley</option>
+              <option value="south-sjv">South San Joaquin Valley</option>
+              <option value="central-coast">Central Coast</option>
+              <option value="inland-empire">Inland Empire / Desert</option>
+              <option value="border">Southern California Border</option>
+              <option value="statewide">Statewide / Virtual</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <!-- Meta row: count + clear -->
+      <div class="cal-filters__meta">
+        <div class="cal-filters__count">
+          Showing <strong id="filterCount">19</strong> <span id="filterNoun">opportunities</span>
+          <span id="filterSummary" style="margin-left: 6px; font-family: var(--font-mono); color: var(--fg-3);"></span>
+        </div>
+        <button class="cal-chip cal-chip--clear" type="button" id="clearFilters">Clear all filters</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────── EVENTS LIST ─────────────────────── -->
+  <section class="cal-results" id="calendar-list">
+    <div class="container">
+      <div class="cal-list" id="calList" aria-live="polite">
+        <!-- Events rendered by JS -->
+      </div>
+      <div class="cal-empty" id="calEmpty" hidden>
+        <h3>Nothing matches these filters yet.</h3>
+        <p>Try clearing one of your filters, or check back — partner submissions are reviewed and added weekly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────── SUBMIT EVENT FORM ─────────────────────── -->
+  <section class="cal-submit" id="submit">
+    <div class="container cal-submit__inner">
+
+      <div class="cal-submit__copy">
+        <span class="cata-eyebrow cata-eyebrow--teal">Partner intake</span>
+        <h2>Hosting something? <span style="color: var(--cata-teal);">Add it to the hub.</span></h2>
+        <p>
+          The hub is open to any Alliance partner running an event, training, application, funding window, or deadline that advances California's AgTech workforce, entrepreneurship, or regional network.
+        </p>
+        <p>
+          Submissions are reviewed by the Alliance team. We aim to confirm and publish — or reach out with questions — within five business days.
+        </p>
+
+        <div class="cal-submit__guidance">
+          <strong>What we look for:</strong> a clear date, a clear next step (where to apply, register, or learn more), and a community the Alliance serves. Internal-only or unrelated submissions won't be published.
+        </div>
+      </div>
+
+      <form class="cal-form" id="submitForm" novalidate>
+        <div class="cal-form__grid">
+
+          <div class="cal-field cal-field--full">
+            <label for="f-type">What is this? <span class="req">*</span></label>
+            <select id="f-type" name="type" required>
+              <option value="">Select a type…</option>
+              <option value="event">Event — field day, demo, convening, roundtable</option>
+              <option value="training">Training — workshop, certification, course</option>
+              <option value="application">Application — program intake, cohort, challenge, nomination, abstract submission</option>
+              <option value="funding">Funding — grant, voucher, pilot dollars</option>
+            </select>
+          </div>
+
+          <div class="cal-field cal-field--full">
+            <label for="f-title">Title <span class="req">*</span></label>
+            <input type="text" id="f-title" name="title" required placeholder="e.g. FARMS Field Day · Hopland" />
+          </div>
+
+          <div class="cal-field">
+            <label for="f-date">Date <span class="req">*</span> <span style="text-transform: none; letter-spacing: 0; font-family: var(--font-text); font-size: 12px; color: var(--fg-3); margin-left: 6px;">(or deadline)</span></label>
+            <input type="date" id="f-date" name="date" required />
+          </div>
+
+          <div class="cal-field">
+            <label for="f-time">Time</label>
+            <input type="text" id="f-time" name="time" placeholder="e.g. 9 AM – 3 PM" />
+          </div>
+
+          <div class="cal-field">
+            <label for="f-region">Region <span class="req">*</span></label>
+            <select id="f-region" name="region" required>
+              <option value="">Select a region…</option>
+              <option value="bay-area">Bay Area</option>
+              <option value="north-state">North State</option>
+              <option value="sacramento">Sacramento</option>
+              <option value="north-sjv">North San Joaquin Valley</option>
+              <option value="central-sjv">Central San Joaquin Valley</option>
+              <option value="south-sjv">South San Joaquin Valley</option>
+              <option value="central-coast">Central Coast</option>
+              <option value="inland-empire">Inland Empire / Desert</option>
+              <option value="border">Southern California Border</option>
+              <option value="statewide">Statewide / Virtual</option>
+            </select>
+          </div>
+
+          <div class="cal-field">
+            <label for="f-topic">Topic <span class="req">*</span></label>
+            <select id="f-topic" name="topic" required>
+              <option value="">Select a topic…</option>
+              <option value="workforce">Workforce</option>
+              <option value="entrepreneurship">Entrepreneurship</option>
+              <option value="network">Network</option>
+            </select>
+          </div>
+
+          <div class="cal-field cal-field--full">
+            <label for="f-location">Venue or location <span style="text-transform: none; letter-spacing: 0; font-family: var(--font-text); font-size: 12px; color: var(--fg-3); margin-left: 6px;">(skip for virtual or non-location-based)</span></label>
+            <input type="text" id="f-location" name="location" placeholder="Venue name, street, city — or leave blank for virtual" />
+          </div>
+
+          <div class="cal-field cal-field--full">
+            <label>Who it's for <span class="req">*</span> <span style="text-transform: none; letter-spacing: 0; font-family: var(--font-text); font-size: 12px; color: var(--fg-3); margin-left: 6px;">(pick all that apply)</span></label>
+            <div class="cal-field__chiplist" role="group" aria-label="Who it's for" data-multiselect="bestFor">
+              <button class="cal-field__chip" type="button" data-value="entrepreneurs" aria-pressed="false">Entrepreneurs &amp; startups</button>
+              <button class="cal-field__chip" type="button" data-value="growers" aria-pressed="false">Growers</button>
+              <button class="cal-field__chip" type="button" data-value="workforce-students" aria-pressed="false">Workforce &amp; students</button>
+              <button class="cal-field__chip" type="button" data-value="researchers" aria-pressed="false">Researchers</button>
+              <button class="cal-field__chip" type="button" data-value="investors" aria-pressed="false">Investors</button>
+              <button class="cal-field__chip" type="button" data-value="industry" aria-pressed="false">Industry partners</button>
+              <button class="cal-field__chip" type="button" data-value="policy" aria-pressed="false">Policymakers</button>
+              <button class="cal-field__chip" type="button" data-value="educators" aria-pressed="false">Educators</button>
+            </div>
+          </div>
+
+          <div class="cal-field cal-field--full">
+            <label for="f-desc">Short description <span class="req">*</span> <span style="text-transform: none; letter-spacing: 0; font-family: var(--font-text); font-size: 12px; color: var(--fg-3); margin-left: 6px;">(50–280 characters)</span></label>
+            <textarea id="f-desc" name="description" required maxlength="280" placeholder="One or two sentences. What is it, who should engage, why does it matter?"></textarea>
+          </div>
+
+          <div class="cal-field">
+            <label for="f-url">Link <span style="text-transform: none; letter-spacing: 0; font-family: var(--font-text); font-size: 12px; color: var(--fg-3); margin-left: 6px;">(RSVP, apply, or learn more)</span></label>
+            <input type="url" id="f-url" name="url" placeholder="https://…" />
+          </div>
+
+          <div class="cal-field">
+            <label for="f-amount">Funding amount <span style="text-transform: none; letter-spacing: 0; font-family: var(--font-text); font-size: 12px; color: var(--fg-3); margin-left: 6px;">(only for funding)</span></label>
+            <input type="text" id="f-amount" name="amount" placeholder="e.g. Up to $50,000" />
+          </div>
+
+          <div class="cal-field">
+            <label for="f-org">Hosting organization <span class="req">*</span></label>
+            <input type="text" id="f-org" name="organization" required placeholder="e.g. UC ANR Hopland REC" />
+          </div>
+
+          <div class="cal-field">
+            <label for="f-name">Your name <span class="req">*</span></label>
+            <input type="text" id="f-name" name="contactName" required />
+          </div>
+
+          <div class="cal-field cal-field--full">
+            <label for="f-email">Your email <span class="req">*</span></label>
+            <input type="email" id="f-email" name="contactEmail" required placeholder="you@org.org" />
+          </div>
+
+        </div>
+
+        <div class="cal-form__footer">
+          <p class="cal-form__notice">
+            By submitting, you confirm you have authority to publicize this event and that the details above are accurate.
+          </p>
+          <button class="btn btn--solid-navy btn--lg" type="submit">
+            Submit for review
+            <svg class="icon-arrow-ne" viewBox="0 0 14 14" aria-hidden="true">
+              <path d="M3.5 10.5 L 10.5 3.5" />
+              <path d="M5 3.5 L 10.5 3.5 L 10.5 9" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="cal-form__toast" id="formToast">
+          ✓ Submitted. The Alliance team will review and follow up by email within 5 business days.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ────────────────────── FOOTER (matches index.html) ─────────────────────── -->
+  <footer class="site-footer" data-surface="dark">
+    <img class="site-footer__watermark" src="../../assets/logos/png/brandmark-lime.png" alt="" aria-hidden="true" />
+    <div class="container site-footer__inner">
+      <div class="site-footer__cols">
+        <div class="site-footer__brand">
+          <img src="../../assets/logos/png/logo-white.png" alt="California AgTech Alliance" />
+          <p>
+            A statewide platform for connecting agricultural innovation, workforce, and entrepreneurship across California's nine regions.
+          </p>
+        </div>
+        <div class="site-footer__col">
+          <span class="cata-eyebrow cata-eyebrow--lime">About</span>
+          <ul>
+            <li><a href="#">The Alliance</a></li>
+            <li><a href="#">Leadership</a></li>
+            <li><a href="#">Partners</a></li>
+            <li><a href="#">Funders</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__col">
+          <span class="cata-eyebrow cata-eyebrow--lime">Programs</span>
+          <ul>
+            <li><a href="#">Workforce</a></li>
+            <li><a href="#">Entrepreneurship</a></li>
+            <li><a href="#">Network</a></li>
+            <li><a href="#">Test-bed map</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__col">
+          <span class="cata-eyebrow cata-eyebrow--lime">Connect</span>
+          <ul>
+            <li><a href="#">News</a></li>
+            <li><a href="calendar.html">Events</a></li>
+            <li><a href="#submit">Submit an event</a></li>
+            <li><a href="#">Contact us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="site-footer__base" style="flex-direction: column; align-items: stretch; gap: 8px;">
+        <div style="display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+          <span>© 2026 California AgTech Alliance</span>
+          <span>calagtechalliance.org</span>
+        </div>
+        <span class="cata-mono" style="font-size: 11px; color: rgba(243,243,239,0.55); letter-spacing: 0.06em;">
+          Statewide California AgTech Network, Entrepreneurship &amp; Workforce Programs
+          · Lead institution UC Agriculture and Natural Resources
+          · Funded through California Jobs First
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ────────────────────── DATA + FILTER LOGIC ─────────────────────── -->
+  <script>
+  (function () {
+    'use strict';
+
+    // ---------- Reference dictionaries (label maps) ----------
+    const REGIONS = {
+      'bay-area':       'Bay Area',
+      'north-state':    'North State',
+      'sacramento':     'Sacramento',
+      'north-sjv':      'North San Joaquin Valley',
+      'central-sjv':    'Central San Joaquin Valley',
+      'south-sjv':      'South San Joaquin Valley',
+      'central-coast':  'Central Coast',
+      'inland-empire':  'Inland Empire / Desert',
+      'border':         'Southern California Border',
+      'statewide':      'Statewide / Virtual'
+    };
+    const TOPICS = {
+      'workforce':        'Workforce',
+      'entrepreneurship': 'Entrepreneurship',
+      'network':          'Network'
+    };
+    const BESTFOR = {
+      'entrepreneurs':       'Entrepreneurs',
+      'growers':             'Growers',
+      'workforce-students':  'Workforce & students',
+      'researchers':         'Researchers',
+      'investors':           'Investors',
+      'industry':            'Industry partners',
+      'policy':              'Policymakers',
+      'educators':           'Educators'
+    };
+    const TYPES = {
+      'event':       { label: 'Event',       plural: 'events',       cta: 'RSVP',       dateLabel: '' },
+      'training':    { label: 'Training',    plural: 'trainings',    cta: 'Register',   dateLabel: '' },
+      'application': { label: 'Application', plural: 'applications', cta: 'Apply now',  dateLabel: 'Apply by' },
+      'funding':     { label: 'Funding',     plural: 'funding',      cta: 'Learn more', dateLabel: 'Closes' }
+    };
+
+    // ---------- Opportunities seed data ----------
+    // type: event | training | application | funding
+    // date: primary date (start for events/trainings, deadline for applications/funding)
+    // endDate: optional (multi-day events only)
+    // amount: optional (funding amount as a string)
+    const EVENTS = [
+      // ─── EVENTS ───
+      {
+        id: 'frc-showcase',
+        type: 'event',
+        title: 'Farm Robotics Challenge · Statewide Showcase Day',
+        date: '2026-06-12',
+        time: '9:00 AM – 4:00 PM',
+        venue: 'UC Merced · Castle Air Museum Field',
+        region: 'central-sjv',
+        topic: 'workforce',
+        bestFor: ['workforce-students', 'industry', 'educators', 'researchers'],
+        excerpt: 'Student teams from 18 California campuses demo field-built robotics solving real grower-defined problems. Public welcome.',
+        url: '#'
+      },
+      {
+        id: 'vine-connect-demo-jun',
+        type: 'event',
+        title: 'VINE Connect · June Demo Day',
+        date: '2026-06-18',
+        time: '10:00 AM – 1:30 PM',
+        venue: 'Sacramento River Center · Old Sac',
+        region: 'sacramento',
+        topic: 'entrepreneurship',
+        bestFor: ['entrepreneurs', 'growers', 'investors'],
+        excerpt: 'Six pre-Series-A AgTech founders present field-validated tech to a panel of growers, investors, and Cooperative Extension specialists.',
+        url: '#'
+      },
+      {
+        id: 'test-bed-salinas',
+        type: 'event',
+        title: 'Test-Bed Site Visit · Salinas Vegetable Block',
+        date: '2026-06-05',
+        time: '7:30 AM – 11:00 AM',
+        venue: 'Spence Ranch · Salinas',
+        region: 'central-coast',
+        topic: 'network',
+        bestFor: ['industry', 'researchers'],
+        excerpt: 'On-farm walk-through of the Central Coast test-bed for autonomous specialty-crop equipment. Working block; closed-toe shoes required.',
+        url: '#'
+      },
+      {
+        id: 'investor-almonds-ai',
+        type: 'event',
+        title: 'Investor Roundtable · Almonds + AI',
+        date: '2026-07-09',
+        time: '4:30 PM – 7:00 PM',
+        venue: 'Fresno State · Maddy Institute',
+        region: 'central-sjv',
+        topic: 'entrepreneurship',
+        bestFor: ['investors', 'entrepreneurs', 'industry'],
+        excerpt: 'Closed-door roundtable on capital flows into California specialty-crop AI. Twelve LPs, eight founders, two grower representatives.',
+        url: '#'
+      },
+      {
+        id: 'farms-fieldday-hopland',
+        type: 'event',
+        title: 'FARMS Field Day · Hopland',
+        date: '2026-08-14',
+        time: '9:00 AM – 3:00 PM',
+        venue: 'UC Hopland Research & Extension Center',
+        region: 'bay-area',
+        topic: 'workforce',
+        bestFor: ['growers', 'workforce-students', 'industry'],
+        excerpt: 'Live AgTech demos on working rangeland — 12 startups, four UC ANR research blocks, lunch with growers. Bring layers; the coastal fog is real.',
+        url: '#'
+      },
+      {
+        id: 'awdp-summit',
+        type: 'event',
+        title: 'AWDP Career Pathways Summit',
+        date: '2026-09-10',
+        time: '8:30 AM – 5:00 PM',
+        venue: 'Hartnell College · Salinas',
+        region: 'central-coast',
+        topic: 'workforce',
+        bestFor: ['workforce-students', 'educators', 'industry'],
+        excerpt: 'Statewide summit for community colleges and CTE partners on California AgTech career stacks, credential portability, and employer pipelines.',
+        url: '#'
+      },
+      {
+        id: 'tribal-listening',
+        type: 'event',
+        title: 'Tribal Agriculture Innovation · Listening Session',
+        date: '2026-07-17',
+        time: '10:00 AM – 2:00 PM',
+        venue: 'Mt. Shasta Community Center',
+        region: 'north-state',
+        topic: 'network',
+        bestFor: ['growers', 'policy', 'researchers'],
+        excerpt: 'Hosted in partnership with North State tribal nations. Listening session on how AgTech investment can support tribal sovereignty over food systems.',
+        url: '#'
+      },
+      {
+        id: 'border-roundtable',
+        type: 'event',
+        title: 'Southern Border Region · Industry Roundtable',
+        date: '2026-09-24',
+        time: '3:00 PM – 6:00 PM',
+        venue: 'San Diego SD Tech Hub · Imperial Beach',
+        region: 'border',
+        topic: 'network',
+        bestFor: ['industry', 'investors', 'policy'],
+        excerpt: 'Cross-border AgTech infrastructure roundtable — cold-chain, labor coordination, and Imperial Valley test-bed expansion.',
+        url: '#'
+      },
+      {
+        id: 'statewide-convening',
+        type: 'event',
+        title: 'Statewide Convening 2026',
+        date: '2026-10-22',
+        endDate: '2026-10-23',
+        time: 'Two-day program',
+        venue: 'Sacramento Convention Center',
+        region: 'sacramento',
+        topic: 'network',
+        bestFor: ['policy', 'industry', 'investors', 'entrepreneurs', 'researchers'],
+        excerpt: 'The annual Alliance gathering. Two days, all nine regions in one room. Industry Advisory Board, Innovation Roadmap launch, and the year-end showcase.',
+        url: '#'
+      },
+      {
+        id: 'innovation-grants-may',
+        type: 'event',
+        title: 'Innovation Grant Voucher · Office Hours',
+        date: '2026-05-28',
+        time: '12:00 PM – 1:00 PM',
+        venue: 'Virtual · Zoom',
+        region: 'statewide',
+        topic: 'entrepreneurship',
+        bestFor: ['entrepreneurs'],
+        excerpt: 'Drop-in Q&A for first-time Voucher applicants — eligibility, scoring, common reasons applications fail. Open mic; no slides.',
+        url: '#'
+      },
+
+      // ─── TRAININGS ───
+      {
+        id: 'ducc-may',
+        type: 'training',
+        title: 'DUCC Drone Certification Workshop',
+        date: '2026-05-22',
+        time: '8:00 AM – 5:00 PM',
+        venue: 'Modesto Junior College · Ag Pavilion',
+        region: 'north-sjv',
+        topic: 'workforce',
+        bestFor: ['workforce-students', 'growers'],
+        excerpt: 'Two-day Part 107 + ag-application training. Hands-on flight time on managed orchard plots. Tuition covered for Alliance partners.',
+        url: '#'
+      },
+      {
+        id: 'farmworker-upskill',
+        type: 'training',
+        title: 'Farmworker Tech Upskill · Bilingual Workshop',
+        date: '2026-08-07',
+        time: '8:00 AM – 4:00 PM',
+        venue: 'Bakersfield College · Farm Lab',
+        region: 'south-sjv',
+        topic: 'workforce',
+        bestFor: ['workforce-students'],
+        excerpt: 'Bilingual (EN/ES) hands-on day for current farmworkers on tablet-based crop scouting, basic data entry, and equipment diagnostics.',
+        url: '#'
+      },
+
+      // ─── APPLICATIONS ───
+      {
+        id: 'frc-2027-apps',
+        type: 'application',
+        title: 'Farm Robotics Challenge 2027 · Student team applications',
+        date: '2026-09-15',
+        time: 'Rolling review',
+        venue: 'Apply online · open to California campuses',
+        region: 'statewide',
+        topic: 'workforce',
+        bestFor: ['workforce-students', 'educators'],
+        excerpt: 'Student teams of 4–8 from any California college or university. Build robotics for grower-defined challenges across all nine regions.',
+        url: '#'
+      },
+      {
+        id: 'vine-cohort-fall',
+        type: 'application',
+        title: 'VINE Connect · Fall founder cohort',
+        date: '2026-06-30',
+        venue: 'Apply online · Cohort runs Aug–Dec 2026',
+        region: 'statewide',
+        topic: 'entrepreneurship',
+        bestFor: ['entrepreneurs'],
+        excerpt: 'Six pre-revenue AgTech founders for a 16-week cohort. Includes grower-validated field trials, $25K stipend, and a demo-day slot.',
+        url: '#'
+      },
+      {
+        id: 'awdp-apprenticeship',
+        type: 'application',
+        title: 'AWDP AgTech Apprenticeship · Spring intake',
+        date: '2026-07-15',
+        venue: 'Multi-region · Bay Area, Central Coast, Central SJV',
+        region: 'statewide',
+        topic: 'workforce',
+        bestFor: ['workforce-students'],
+        excerpt: 'Paid 18-month AgTech apprenticeship — split between community college coursework and on-farm placement with industry partners.',
+        url: '#'
+      },
+
+      // ─── FUNDING ───
+      {
+        id: 'voucher-window',
+        type: 'funding',
+        title: 'Innovation Grant Voucher · Open submissions',
+        date: '2026-08-31',
+        time: 'Rolling review',
+        venue: 'Statewide eligibility',
+        region: 'statewide',
+        topic: 'entrepreneurship',
+        bestFor: ['entrepreneurs'],
+        amount: '$5,000 – $50,000',
+        excerpt: 'Vouchers fund grower-validated pilot deployments and field trials for California-based AgTech startups. Closes when annual budget is exhausted.',
+        url: '#'
+      },
+      {
+        id: 'usda-pilot-window',
+        type: 'funding',
+        title: 'USDA AgTech Pilot Funding · 2026 window',
+        date: '2026-07-25',
+        venue: 'Statewide · USDA-eligible projects',
+        region: 'statewide',
+        topic: 'entrepreneurship',
+        bestFor: ['entrepreneurs', 'researchers', 'growers'],
+        amount: 'Up to $250,000',
+        excerpt: 'Federal pilot dollars for on-farm technology deployments addressing labor, water, or climate adaptation. Alliance partners may apply jointly.',
+        url: '#'
+      },
+
+      // ─── APPLICATIONS (deadline-style: abstract submission, nominations) ───
+      {
+        id: 'convening-abstracts',
+        type: 'application',
+        title: 'Statewide Convening · Speaker abstracts due',
+        date: '2026-08-15',
+        venue: 'Submit online',
+        region: 'statewide',
+        topic: 'network',
+        bestFor: ['researchers', 'industry', 'policy', 'entrepreneurs'],
+        excerpt: 'Propose a session for the October Statewide Convening. We prioritize cross-regional, cross-pillar topics with concrete on-the-ground examples.',
+        url: '#'
+      },
+      {
+        id: 'iab-nominations',
+        type: 'application',
+        title: 'Industry Advisory Board · 2027 nominations close',
+        date: '2026-09-01',
+        venue: 'Nominate online',
+        region: 'statewide',
+        topic: 'network',
+        bestFor: ['industry', 'growers', 'investors'],
+        excerpt: 'Two open seats on the Industry Advisory Board. Two-year terms; nominate yourself or a peer working at the grower / commercialization edge.',
+        url: '#'
+      }
+    ];
+
+    // ---------- Filter state ----------
+    // type is an array (multi-select chips)
+    // region is a string (single-select dropdown)
+    // query is a free-text search string
+    // Topic + bestFor are not user-filterable here, but stay in the data
+    // for tag rendering on cards and for keyword search matching.
+    const state = {
+      query:  '',
+      type:   [],
+      region: ''
+    };
+
+    // ---------- Render helpers ----------
+    const fmtMonthShort = (iso) => new Date(iso + 'T00:00:00').toLocaleString('en-US', { month: 'short' });
+    const fmtDay = (iso) => new Date(iso + 'T00:00:00').getDate();
+
+    function escapeHTML(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[c]);
+    }
+
+    function renderEvent(ev) {
+      const typeSpec = TYPES[ev.type] || TYPES.event;
+      const isMulti = !!ev.endDate;
+      const startMonth = fmtMonthShort(ev.date).toUpperCase();
+      const startDay = fmtDay(ev.date);
+      const endDay = isMulti ? fmtDay(ev.endDate) : null;
+      const dateLabelText = typeSpec.dateLabel
+        ? `<span class="time">${escapeHTML(typeSpec.dateLabel)}</span>`
+        : `<span class="time">${escapeHTML(ev.time || '')}</span>`;
+
+      const dateBlock = isMulti
+        ? `
+          <div class="cal-event__date cal-event__date--multi">
+            <span class="month">${startMonth}</span>
+            <span class="day-range">${startDay}–${endDay}</span>
+            <span class="time">${escapeHTML(ev.time || '')}</span>
+          </div>`
+        : `
+          <div class="cal-event__date">
+            <span class="month">${startMonth}</span>
+            <span class="day">${startDay}</span>
+            ${dateLabelText}
+          </div>`;
+
+      // Tag strip: region + topic + audiences ("For growers" etc.)
+      const tagStrip = [
+        `<span class="cal-event__tag cal-event__tag--region">${escapeHTML(REGIONS[ev.region] || ev.region)}</span>`,
+        `<span class="cal-event__tag cal-event__tag--topic">${escapeHTML(TOPICS[ev.topic] || ev.topic)}</span>`,
+        ...((ev.bestFor || []).map(a => `<span class="cal-event__tag">For ${escapeHTML(BESTFOR[a] || a)}</span>`))
+      ].filter(Boolean).join('');
+
+      const amountLine = ev.amount
+        ? `<p class="cal-event__amount">${escapeHTML(ev.amount)}</p>`
+        : '';
+
+      const whereLine = ev.venue
+        ? `<p class="cal-event__where"><strong>${escapeHTML(ev.venue)}</strong></p>`
+        : '';
+
+      return `
+        <article class="cal-event" data-type="${ev.type}" data-region="${ev.region}" data-topic="${ev.topic}" data-bestfor="${(ev.bestFor || []).join(' ')}">
+          ${dateBlock}
+          <div class="cal-event__body">
+            <div class="cal-event__meta">
+              <span class="cal-event__type cal-event__type--${ev.type}">${escapeHTML(typeSpec.label)}</span>
+            </div>
+            <h3 class="cal-event__title">${escapeHTML(ev.title)}</h3>
+            ${amountLine}
+            ${whereLine}
+            <p class="cal-event__excerpt">${escapeHTML(ev.excerpt)}</p>
+            <div class="cal-event__tags">${tagStrip}</div>
+          </div>
+          <div class="cal-event__action">
+            <a href="${ev.url || '#'}" class="btn btn--outline-navy">
+              ${escapeHTML(typeSpec.cta)}
+              <svg class="icon-arrow-ne" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M3.5 10.5 L 10.5 3.5" />
+                <path d="M5 3.5 L 10.5 3.5 L 10.5 9" />
+              </svg>
+            </a>
+          </div>
+        </article>`;
+    }
+
+    // Keyword search — match against title, venue, excerpt, topic label, region label
+    function matchesQuery(ev, q) {
+      if (!q) return true;
+      const haystack = [
+        ev.title,
+        ev.venue || '',
+        ev.excerpt,
+        TOPICS[ev.topic] || '',
+        REGIONS[ev.region] || '',
+        (ev.bestFor || []).map(a => BESTFOR[a] || '').join(' '),
+        TYPES[ev.type] ? TYPES[ev.type].label : ''
+      ].join(' ').toLowerCase();
+      return haystack.includes(q.toLowerCase());
+    }
+
+    function applyFilters() {
+      const list = EVENTS
+        .filter(e =>
+          matchesQuery(e, state.query) &&
+          (state.type.length === 0 || state.type.includes(e.type)) &&
+          (!state.region     || e.region === state.region)
+        )
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      const listEl = document.getElementById('calList');
+      const emptyEl = document.getElementById('calEmpty');
+      const countEl = document.getElementById('filterCount');
+      const nounEl = document.getElementById('filterNoun');
+      const summaryEl = document.getElementById('filterSummary');
+
+      countEl.textContent = list.length;
+
+      // Adjust the noun based on the type filter
+      if (state.type.length === 1) {
+        const spec = TYPES[state.type[0]];
+        nounEl.textContent = list.length === 1 ? spec.label.toLowerCase() : spec.plural;
+      } else {
+        nounEl.textContent = list.length === 1 ? 'opportunity' : 'opportunities';
+      }
+
+      // Build summary chip
+      const summaryParts = [];
+      if (state.query)  summaryParts.push(`matching "${state.query}"`);
+      if (state.region) summaryParts.push(REGIONS[state.region]);
+      summaryEl.textContent = summaryParts.length ? '· ' + summaryParts.join(' · ') : '';
+
+      if (list.length === 0) {
+        listEl.innerHTML = '';
+        emptyEl.hidden = false;
+      } else {
+        emptyEl.hidden = true;
+        listEl.innerHTML = list.map(renderEvent).join('');
+      }
+    }
+
+    // ---------- Wire up multi-select filter chips ----------
+    document.querySelectorAll('.cal-chips').forEach(group => {
+      const groupName = group.getAttribute('data-filter-group');
+      const isMulti   = group.getAttribute('data-multi') === 'true';
+      const allChip   = group.querySelector('.cal-chip[data-value=""]');
+
+      group.addEventListener('click', e => {
+        const chip = e.target.closest('.cal-chip');
+        if (!chip) return;
+        const value = chip.getAttribute('data-value') || '';
+
+        if (!isMulti) {
+          // Single-select fallback (kept for future use; nothing currently uses it)
+          group.querySelectorAll('.cal-chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+          chip.setAttribute('aria-pressed', 'true');
+          state[groupName] = value;
+        } else {
+          // Multi-select behavior
+          if (value === '') {
+            // "All" click — clear this group's selections
+            group.querySelectorAll('.cal-chip').forEach(c => {
+              c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+            });
+            state[groupName] = [];
+          } else {
+            const isActive = chip.getAttribute('aria-pressed') === 'true';
+            chip.setAttribute('aria-pressed', isActive ? 'false' : 'true');
+            if (allChip) allChip.setAttribute('aria-pressed', 'false');
+
+            const set = new Set(state[groupName] || []);
+            if (isActive) set.delete(value);
+            else set.add(value);
+            state[groupName] = Array.from(set);
+
+            // If nothing is selected, re-activate "All"
+            if (state[groupName].length === 0 && allChip) {
+              allChip.setAttribute('aria-pressed', 'true');
+            }
+          }
+        }
+        applyFilters();
+      });
+    });
+
+    // ---------- Region dropdown (single-select) ----------
+    const regionSelect = document.getElementById('regionSelect');
+    regionSelect.addEventListener('change', e => {
+      state.region = e.target.value;
+      applyFilters();
+    });
+
+    // ---------- Search input (debounced) ----------
+    const searchInput = document.getElementById('searchInput');
+    let searchTimer = null;
+    searchInput.addEventListener('input', e => {
+      clearTimeout(searchTimer);
+      const v = e.target.value.trim();
+      searchTimer = setTimeout(() => {
+        state.query = v;
+        applyFilters();
+      }, 120);
+    });
+
+    // ---------- Clear all filters ----------
+    document.getElementById('clearFilters').addEventListener('click', () => {
+      state.query  = '';
+      state.type   = [];
+      state.region = '';
+
+      searchInput.value  = '';
+      regionSelect.value = '';
+
+      document.querySelectorAll('.cal-chips').forEach(group => {
+        group.querySelectorAll('.cal-chip').forEach(c => {
+          c.setAttribute('aria-pressed', (c.getAttribute('data-value') === '') ? 'true' : 'false');
+        });
+      });
+
+      applyFilters();
+    });
+
+    // ---------- Initial render ----------
+    applyFilters();
+
+    // ---------- Submission form ----------
+    document.querySelectorAll('[data-multiselect]').forEach(group => {
+      group.addEventListener('click', e => {
+        const chip = e.target.closest('.cal-field__chip');
+        if (!chip) return;
+        const current = chip.getAttribute('aria-pressed') === 'true';
+        chip.setAttribute('aria-pressed', current ? 'false' : 'true');
+      });
+    });
+
+    const form = document.getElementById('submitForm');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      // Capture audience selections
+      const audience = Array.from(form.querySelectorAll('.cal-field__chip[aria-pressed="true"]'))
+        .map(b => b.getAttribute('data-value'));
+
+      // Basic validation
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(input => {
+        if (!input.value.trim()) {
+          input.style.borderColor = 'var(--cata-teal)';
+          input.style.boxShadow = '0 0 0 3px rgba(0,109,132,0.18)';
+          valid = false;
+        } else {
+          input.style.borderColor = '';
+          input.style.boxShadow = '';
+        }
+      });
+      if (audience.length === 0) {
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Demo: show toast (in production this would POST to /api/events)
+      const data = new FormData(form);
+      const payload = Object.fromEntries(data);
+      payload.audience = audience;
+      console.log('[Calendar] event submission payload →', payload);
+
+      document.getElementById('formToast').classList.add('is-visible');
+      setTimeout(() => {
+        form.reset();
+        form.querySelectorAll('.cal-field__chip').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      }, 800);
+    });
+  })();
+  </script>
+
+</body>
+</html>
